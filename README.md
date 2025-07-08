@@ -106,7 +106,7 @@ To build a spam classifier using **Naive Bayes** or **SVM**, and deploy it throu
 
 ## 👨‍💻 Developed By
 
-**Anant Kiranmauli**  
+**Sandeep Kumar**  
 🎓 Electrical Engineering Student  
 📍 Government Polytechnic, Munger  
 🧠 Interests: Coding, Logic, and Engineering Applications
