@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Email Spam Detector</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .dark-mode {
+      background-color: #121212;
+      color: #f8f9fa;
+    }
+
+    .dark-mode .form-control,
+    .dark-mode .card {
+      background-color: #2c2c2c;
+      color: #f8f9fa;
+    }
+
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .btn-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.25rem;
+    }
+
+    .result-box {
+      white-space: pre-wrap;
+      background-color: #f1f1f1;
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+
+    .dark-mode .result-box {
+      background-color: #3a3a3a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <button class="btn btn-outline-secondary btn-toggle" onclick="toggleMode()" id="modeToggleBtn">🌙</button>
+
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card p-4">
+          <h2 class="text-center mb-4 text-primary">📧 Email Spam Message Detector</h2>
+
+          {% if classify is not defined %}
+          <form method="POST" action="{{ url_for('analyze_mail') }}">
+            <div class="mb-3">
+              <label for="mail" class="form-label">Enter your email content:</label>
+              <textarea class="form-control" id="mail" name="mail" rows="5" required></textarea>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary px-4">Predict</button>
+            </div>
+          </form>
+          {% endif %}
+
+          {% if classify is defined %}
+            <div class="mt-4">
+              {% if classify == 0 %}
+                <div class="alert alert-danger">🚫 This is a spam mail</div>
+              {% elif classify == 1 %}
+                <div class="alert alert-success">✅ This is a ham mail</div>
+              {% endif %}
+              <div class="mt-3">
+                <strong>📩 Mail Content:</strong>
+                <div class="result-box mt-2">{{ request.form.mail }}</div>
+              </div>
+              <div class="text-center mt-4">
+                <a href="{{ url_for('analyze_mail') }}" class="btn btn-outline-secondary">Check Another Mail</a>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleMode() {
+      const body = document.body;
+      const btn = document.getElementById("modeToggleBtn");
+      const darkMode = body.classList.toggle("dark-mode");
+      localStorage.setItem("darkMode", darkMode);
+      btn.textContent = darkMode ? "☀️" : "🌙";
+    }
+
+    window.onload = function () {
+      const darkModePref = localStorage.getItem("darkMode");
+      const body = document.body;
+      const btn = document.getElementById("modeToggleBtn");
+      if (darkModePref === "true") {
+        body.classList.add("dark-mode");
+        btn.textContent = "☀️";
+      }
+    };
+  </script>
+</body>
+</html>
